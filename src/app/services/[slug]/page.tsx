@@ -390,7 +390,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <div>
               <h2 className="mb-6 text-3xl font-bold">Key Outcomes</h2>
               <ul className="space-y-4">
-                {service.benefits.map((benefit, index) => (
+                {(service.benefits || []).map((benefit, index) => (
                   <li key={index} className="flex gap-3">
                     <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
                     <span className="text-lg">{benefit}</span>
@@ -402,7 +402,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <div>
               <h2 className="mb-6 text-3xl font-bold">Problem → Solution</h2>
               <ul className="space-y-4">
-                {service.features.map((feature, index) => (
+                {(service.features || []).map((feature, index) => (
                   <li key={index} className="flex gap-3">
                     <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-primary" />
                     <span className="text-lg">{feature}</span>
@@ -424,7 +424,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
-            {service.technologies.map((tech, index) => (
+            {(service.technologies || []).map((tech, index) => (
               <Badge key={index} variant="secondary" className="px-4 py-2 text-sm">
                 {tech}
               </Badge>
@@ -441,7 +441,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
-            {service.technologies.slice(0, 12).map((tech, index) => (
+            {(service.technologies || []).slice(0, 12).map((tech, index) => (
               <Card key={index} className="flex items-center justify-center p-6">
                 <span className="text-center text-sm font-medium">{tech}</span>
               </Card>
@@ -482,8 +482,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
                   title={caseStudy.title}
                   client={caseStudy.client}
                   industry={caseStudy.industry}
-                  kpis={caseStudy.kpis}
-                  href={`/case-studies/${caseStudy.slug}`}
+                  summary={caseStudy.description}
+                  results={caseStudy.results || []}
+                  slug={caseStudy.slug}
                 />
               ))}
             </div>
@@ -561,8 +562,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
       <CTABand
         title="Ready to Get Started?"
         description={`Let's discuss how our ${service.title.toLowerCase()} can help your business.`}
-        primaryCTA={{ label: 'Schedule Consultation', href: '/contact' }}
-        secondaryCTA={{ label: 'View All Services', href: '/services' }}
+        ctaText="Schedule Consultation"
+        ctaHref="/contact"
       />
     </>
   );

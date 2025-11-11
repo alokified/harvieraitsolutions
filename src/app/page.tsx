@@ -8,6 +8,7 @@ import { Testimonials } from '@/components/sections/testimonials';
 import { BlogCard } from '@/components/sections/blog-card';
 import { FAQAccordion } from '@/components/sections/faq-accordion';
 import { CTABand } from '@/components/sections/cta-band';
+import { getIconComponent } from '@/lib/icons';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -79,6 +80,33 @@ const faqs = [
   },
 ];
 
+const testimonials = [
+  {
+    quote:
+      'Harviera IT Solutions transformed our legacy systems into a modern, scalable platform. The results exceeded our expectations.',
+    author: 'Sarah Johnson',
+    role: 'CTO',
+    company: 'TechCorp Inc.',
+    rating: 5,
+  },
+  {
+    quote:
+      'Their expertise in cloud migration saved us months of work and significantly reduced our infrastructure costs.',
+    author: 'Michael Chen',
+    role: 'VP of Engineering',
+    company: 'DataFlow Systems',
+    rating: 5,
+  },
+  {
+    quote:
+      'Professional, responsive, and highly skilled. The team delivered our project on time and within budget.',
+    author: 'Emily Rodriguez',
+    role: 'Director of IT',
+    company: 'HealthFirst',
+    rating: 5,
+  },
+];
+
 export default function Home() {
   const featuredCaseStudy = allCaseStudies[0];
   const latestResources = [...allBlogPosts, ...allGuides]
@@ -88,10 +116,10 @@ export default function Home() {
   return (
     <>
       <HeroSplit
-        headline="Transform Your Business with Enterprise Technology"
+        title="Transform Your Business with Enterprise Technology"
         description="We deliver world-class IT solutions that drive growth, efficiency, and innovation. From custom software to AI-powered systems, we turn your vision into reality."
-        primaryCTA={{ label: 'Start Your Project', href: '/contact' }}
-        secondaryCTA={{ label: 'View Our Work', href: '/case-studies' }}
+        ctaPrimary={{ text: 'Start Your Project', href: '/contact' }}
+        ctaSecondary={{ text: 'View Our Work', href: '/case-studies' }}
         imageSrc="/images/hero-home.jpg"
         imageAlt="Enterprise Technology Solutions"
       />
@@ -113,8 +141,8 @@ export default function Home() {
                 key={service.slug}
                 title={service.title}
                 description={service.description}
-                icon={service.icon}
-                features={service.features.slice(0, 3)}
+                icon={getIconComponent(service.icon)}
+                features={(service.features || []).slice(0, 3)}
                 href={`/services/${service.slug}`}
               />
             ))}
@@ -170,8 +198,9 @@ export default function Home() {
                 title={featuredCaseStudy.title}
                 client={featuredCaseStudy.client}
                 industry={featuredCaseStudy.industry}
-                kpis={featuredCaseStudy.kpis}
-                href={`/case-studies/${featuredCaseStudy.slug}`}
+                summary={featuredCaseStudy.description}
+                results={featuredCaseStudy.results || []}
+                slug={featuredCaseStudy.slug}
               />
             </div>
 
@@ -201,7 +230,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Testimonials />
+      <Testimonials testimonials={testimonials} />
 
       <section className="py-16 md:py-24">
         <div className="container">
@@ -222,7 +251,7 @@ export default function Home() {
                 date={resource.date}
                 readTime={resource.readTime}
                 category={resource.category}
-                link={`/resources/${'category' in resource && resource.category === 'guide' ? 'guides' : 'blog'}/${resource.slug}`}
+                slug={resource.slug}
               />
             ))}
           </div>
@@ -257,8 +286,8 @@ export default function Home() {
       <CTABand
         title="Ready to Transform Your Business?"
         description="Let's discuss how we can help you achieve your technology goals."
-        primaryCTA={{ label: 'Schedule a Consultation', href: '/contact' }}
-        secondaryCTA={{ label: 'View Our Services', href: '/services' }}
+        ctaText="Schedule a Consultation"
+        ctaHref="/contact"
       />
 
       <script

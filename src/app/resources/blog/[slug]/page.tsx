@@ -275,7 +275,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   date={relatedPost.date}
                   readTime={relatedPost.readTime}
                   category={relatedPost.category}
-                  link={`/resources/blog/${relatedPost.slug}`}
+                  slug={relatedPost.slug}
                 />
               ))}
             </div>

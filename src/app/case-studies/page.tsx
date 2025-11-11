@@ -31,7 +31,7 @@ export default function CaseStudiesPage() {
   }, []);
 
   const kpiTypes = useMemo(() => {
-    const allKPIs = allCaseStudies.flatMap((cs) => cs.kpis.map((kpi) => kpi.metric));
+    const allKPIs = allCaseStudies.flatMap((cs) => (cs.kpis || []).map((kpi) => kpi.metric));
     return ['all', ...new Set(allKPIs)];
   }, []);
 
@@ -41,7 +41,8 @@ export default function CaseStudiesPage() {
       const matchesIndustry = selectedIndustry === 'all' || cs.industry === selectedIndustry;
       const matchesService = selectedService === 'all' || cs.services?.includes(selectedService);
       const matchesTech = selectedTech === 'all' || cs.technologies?.includes(selectedTech);
-      const matchesKPI = selectedKPI === 'all' || cs.kpis.some((kpi) => kpi.metric === selectedKPI);
+      const matchesKPI =
+        selectedKPI === 'all' || (cs.kpis || []).some((kpi) => kpi.metric === selectedKPI);
 
       return matchesIndustry && matchesService && matchesTech && matchesKPI;
     });
@@ -63,10 +64,10 @@ export default function CaseStudiesPage() {
   return (
     <>
       <HeroSplit
-        headline="Real Results from Real Clients"
+        title="Real Results from Real Clients"
         description="Discover how we've helped organizations transform their business through technology with measurable outcomes."
-        primaryCTA={{ label: 'View All Studies', href: '#case-studies' }}
-        secondaryCTA={{ label: 'Start Your Project', href: '/contact' }}
+        ctaPrimary={{ text: 'View All Studies', href: '#case-studies' }}
+        ctaSecondary={{ text: 'Start Your Project', href: '/contact' }}
         imageSrc="/images/case-studies-hero.jpg"
         imageAlt="Case Studies"
       />
@@ -186,8 +187,9 @@ export default function CaseStudiesPage() {
                 title={caseStudy.title}
                 client={caseStudy.client}
                 industry={caseStudy.industry}
-                kpis={caseStudy.kpis}
-                href={`/case-studies/${caseStudy.slug}`}
+                summary={caseStudy.description}
+                results={caseStudy.results || []}
+                slug={caseStudy.slug}
               />
             ))}
           </div>
@@ -205,8 +207,8 @@ export default function CaseStudiesPage() {
       <CTABand
         title="Ready to Write Your Success Story?"
         description="Join our growing list of satisfied clients achieving transformative results."
-        primaryCTA={{ label: 'Start Your Project', href: '/contact' }}
-        secondaryCTA={{ label: 'Our Services', href: '/services' }}
+        ctaText="Start Your Project"
+        ctaHref="/contact"
       />
     </>
   );

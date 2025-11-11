@@ -397,7 +397,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
             <div>
               <h2 className="mb-6 text-3xl font-bold">Key Outcomes</h2>
               <ul className="space-y-4">
-                {industry.benefits.map((benefit, index) => (
+                {(industry.benefits || []).map((benefit, index) => (
                   <li key={index} className="flex gap-3">
                     <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-primary" />
                     <span className="text-lg">{benefit}</span>
@@ -409,7 +409,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
             <div>
               <h2 className="mb-6 text-3xl font-bold">Industry Challenges</h2>
               <ul className="space-y-4">
-                {industry.challenges.map((challenge, index) => (
+                {(industry.challenges || []).map((challenge, index) => (
                   <li key={index} className="flex gap-3">
                     <AlertCircle className="mt-1 h-5 w-5 shrink-0 text-destructive" />
                     <span className="text-lg">{challenge}</span>
@@ -431,7 +431,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {industry.solutions.map((solution, index) => (
+            {(industry.solutions || []).map((solution, index) => (
               <Card key={index} className="p-6">
                 <div className="mb-3 flex gap-2">
                   <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
@@ -515,8 +515,9 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
                   title={caseStudy.title}
                   client={caseStudy.client}
                   industry={caseStudy.industry}
-                  kpis={caseStudy.kpis}
-                  href={`/case-studies/${caseStudy.slug}`}
+                  summary={caseStudy.description}
+                  results={caseStudy.results || []}
+                  slug={caseStudy.slug}
                 />
               ))}
             </div>
@@ -594,8 +595,8 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
       <CTABand
         title="Ready to Transform Your Business?"
         description={`Let's discuss how our ${industry.title.toLowerCase()} solutions can help you succeed.`}
-        primaryCTA={{ label: 'Schedule Consultation', href: '/contact' }}
-        secondaryCTA={{ label: 'View All Solutions', href: '/solutions' }}
+        ctaText="Schedule Consultation"
+        ctaHref="/contact"
       />
     </>
   );

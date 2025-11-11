@@ -14,11 +14,11 @@ export default function SolutionsPage() {
   return (
     <>
       <HeroSplit
-        eyebrow="Industry Solutions"
-        headline="Specialized Solutions for Your Industry"
+        subtitle="Industry Solutions"
+        title="Specialized Solutions for Your Industry"
         description="We understand the unique challenges of your industry and deliver solutions that address them effectively."
-        primaryCTA={{ label: 'Explore Solutions', href: '#solutions' }}
-        secondaryCTA={{ label: 'Contact Us', href: '/contact' }}
+        ctaPrimary={{ text: 'Explore Solutions', href: '#solutions' }}
+        ctaSecondary={{ text: 'Contact Us', href: '/contact' }}
         imageSrc="/images/solutions-hero.jpg"
         imageAlt="Industry Solutions"
       />
@@ -37,9 +37,9 @@ export default function SolutionsPage() {
               <SolutionCard
                 key={industry.slug}
                 title={industry.title}
+                industry={industry.title}
                 description={industry.description}
-                icon={industry.icon}
-                challenges={industry.challenges}
+                benefits={industry.challenges || []}
                 href={`/solutions/${industry.slug}`}
               />
             ))}
@@ -50,8 +50,8 @@ export default function SolutionsPage() {
       <CTABand
         title="Need a Custom Solution?"
         description="Every industry has unique requirements. Let's build something perfect for yours."
-        primaryCTA={{ label: 'Start Discussion', href: '/contact' }}
-        secondaryCTA={{ label: 'View Case Studies', href: '/case-studies' }}
+        ctaText="Start Discussion"
+        ctaHref="/contact"
       />
     </>
   );

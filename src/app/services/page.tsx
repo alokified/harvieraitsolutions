@@ -2,6 +2,7 @@ import { allServices } from '.contentlayer/generated';
 import { HeroSplit } from '@/components/sections/hero-split';
 import { ServiceCard } from '@/components/sections/service-card';
 import { CTABand } from '@/components/sections/cta-band';
+import { getIconComponent } from '@/lib/icons';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,11 +15,11 @@ export default function ServicesPage() {
   return (
     <>
       <HeroSplit
-        eyebrow="Our Services"
-        headline="Expert IT Solutions for Modern Businesses"
+        subtitle="Our Services"
+        title="Expert IT Solutions for Modern Businesses"
         description="From custom software development to managed IT services, we provide end-to-end technology solutions that drive growth and innovation."
-        primaryCTA={{ label: 'Schedule Consultation', href: '/contact' }}
-        secondaryCTA={{ label: 'View Case Studies', href: '/case-studies' }}
+        ctaPrimary={{ text: 'Schedule Consultation', href: '/contact' }}
+        ctaSecondary={{ text: 'View Case Studies', href: '/case-studies' }}
         imageSrc="/images/services-hero.jpg"
         imageAlt="IT Services Overview"
       />
@@ -38,8 +39,8 @@ export default function ServicesPage() {
                 key={service.slug}
                 title={service.title}
                 description={service.description}
-                icon={service.icon}
-                features={service.features}
+                icon={getIconComponent(service.icon)}
+                features={service.features || []}
                 href={`/services/${service.slug}`}
               />
             ))}
@@ -50,8 +51,8 @@ export default function ServicesPage() {
       <CTABand
         title="Ready to Transform Your Business?"
         description="Let's discuss how our services can help you achieve your goals."
-        primaryCTA={{ label: 'Get Started', href: '/contact' }}
-        secondaryCTA={{ label: 'View Pricing', href: '/pricing' }}
+        ctaText="Get Started"
+        ctaHref="/contact"
       />
     </>
   );

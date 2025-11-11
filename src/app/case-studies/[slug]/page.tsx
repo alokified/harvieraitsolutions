@@ -282,8 +282,9 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   title={cs.title}
                   client={cs.client}
                   industry={cs.industry}
-                  kpis={cs.kpis}
-                  href={`/case-studies/${cs.slug}`}
+                  summary={cs.description}
+                  results={cs.results || []}
+                  slug={cs.slug}
                 />
               ))}
             </div>
@@ -303,8 +304,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       <CTABand
         title="Ready to Achieve Similar Results?"
         description="Let's discuss how we can help you transform your business with proven solutions."
-        primaryCTA={{ label: 'Start Your Project', href: '/contact' }}
-        secondaryCTA={{ label: 'Our Services', href: '/services' }}
+        ctaText="Start Your Project"
+        ctaHref="/contact"
       />
     </>
   );

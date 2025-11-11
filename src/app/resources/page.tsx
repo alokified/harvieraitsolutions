@@ -121,7 +121,7 @@ export default function ResourcesPage() {
                     date={post.date}
                     readTime={post.readTime}
                     category={post.category}
-                    link={`/resources/blog/${post.slug}`}
+                    slug={post.slug}
                   />
                 ))}
               </div>

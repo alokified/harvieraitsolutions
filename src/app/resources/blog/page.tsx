@@ -17,9 +17,9 @@ export default function BlogPage() {
   return (
     <>
       <HeroSplit
-        headline="Insights & Expertise"
+        title="Insights & Expertise"
         description="Stay ahead with the latest trends, best practices, and thought leadership in technology."
-        primaryCTA={{ label: 'Subscribe', href: '#newsletter' }}
+        ctaPrimary={{ text: 'Subscribe', href: '#newsletter' }}
         imageSrc="/images/blog-hero.jpg"
         imageAlt="Blog"
       />
@@ -43,7 +43,7 @@ export default function BlogPage() {
                 date={post.date}
                 readTime={post.readTime}
                 category={post.category}
-                href={`/resources/blog/${post.slug}`}
+                slug={post.slug}
               />
             ))}
           </div>
