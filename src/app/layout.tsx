@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Providers } from '@/components/providers';
 import { siteConfig } from '@/config/site';
 import { Toaster } from 'sonner';
+import { generateOrganizationSchema, generateWebSiteSchema, renderJsonLd } from '@/lib/json-ld';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -85,6 +86,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {renderJsonLd(generateOrganizationSchema())}
+        {renderJsonLd(generateWebSiteSchema())}
+      </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <Providers>
           <div className="relative flex min-h-screen flex-col">

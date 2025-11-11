@@ -10,6 +10,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { BlogCard } from '@/components/sections/blog-card';
 import { TableOfContents } from '@/components/blog/table-of-contents';
+import { generateArticleSchema, generateBreadcrumbSchema, renderJsonLd } from '@/lib/json-ld';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -31,9 +32,37 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     return {};
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://harviera.com';
+  const url = `${baseUrl}/resources/blog/${post.slug}`;
+
   return {
-    title: `${post.title} | Blog | Harviera IT Solutions`,
+    title: post.title,
     description: post.excerpt,
+    authors: [{ name: post.author }],
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url,
+      siteName: 'Harviera IT Solutions',
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+      tags: post.tags,
+      images: [
+        {
+          url: `${baseUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [`${baseUrl}/og-image.jpg`],
+    },
   };
 }
 
@@ -55,11 +84,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     )
     .slice(0, 3);
 
-  const shareUrl = `https://harviera.com/resources/blog/${post.slug}`;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://harviera.com';
+  const postUrl = `${baseUrl}/resources/blog/${post.slug}`;
+  const shareUrl = postUrl;
   const shareTitle = post.title;
+
+  // Generate JSON-LD schemas
+  const articleSchema = generateArticleSchema({
+    headline: post.title,
+    description: post.excerpt,
+    url: postUrl,
+    datePublished: post.date,
+    author: post.author,
+    articleSection: post.category,
+    keywords: post.tags,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: baseUrl },
+    { name: 'Resources', url: `${baseUrl}/resources` },
+    { name: 'Blog', url: `${baseUrl}/resources/blog` },
+    { name: post.title, url: postUrl },
+  ]);
 
   return (
     <>
+      {renderJsonLd(articleSchema)}
+      {renderJsonLd(breadcrumbSchema)}
       {/* Article Header */}
       <article className="py-16 md:py-24">
         <div className="container">

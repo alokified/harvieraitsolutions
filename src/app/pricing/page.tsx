@@ -6,11 +6,25 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { FAQAccordion } from '@/components/sections/faq-accordion';
 import { CTABand } from '@/components/sections/cta-band';
+import { generateFAQSchema, renderJsonLd } from '@/lib/json-ld';
 
 export const metadata: Metadata = {
-  title: 'Pricing | Harviera IT Solutions',
+  title: 'Pricing',
   description:
     'Transparent pricing for enterprise IT solutions. Choose from our Good, Better, or Best packages, or contact us for custom enterprise solutions.',
+  openGraph: {
+    title: 'Pricing - Harviera IT Solutions',
+    description:
+      'Transparent pricing for enterprise IT solutions. Choose from our Good, Better, or Best packages.',
+    type: 'website',
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://harviera.com'}/pricing`,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Pricing - Harviera IT Solutions',
+    description:
+      'Transparent pricing for enterprise IT solutions. Choose from our Good, Better, or Best packages.',
+  },
 };
 
 const pricingTiers = [
@@ -241,8 +255,12 @@ const faqs = [
 ];
 
 export default function PricingPage() {
+  // Generate FAQ JSON-LD schema
+  const faqSchema = generateFAQSchema(faqs);
+
   return (
     <>
+      {renderJsonLd(faqSchema)}
       {/* Hero Section */}
       <section className="border-b py-16 md:py-24">
         <div className="container">

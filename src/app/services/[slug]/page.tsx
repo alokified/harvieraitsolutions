@@ -10,6 +10,7 @@ import { CaseStudyCard } from '@/components/sections/case-study-card';
 import { TimelineSteps } from '@/components/sections/timeline-steps';
 import { FAQAccordion } from '@/components/sections/faq-accordion';
 import { CTABand } from '@/components/sections/cta-band';
+import { generateServiceSchema, generateBreadcrumbSchema, renderJsonLd } from '@/lib/json-ld';
 
 interface ServicePageProps {
   params: Promise<{
@@ -31,9 +32,33 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     return {};
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://harviera.com';
+  const url = `${baseUrl}/services/${service.slug}`;
+
   return {
-    title: `${service.title} | Harviera IT Solutions`,
+    title: service.title,
     description: service.description,
+    openGraph: {
+      title: service.title,
+      description: service.description,
+      url,
+      siteName: 'Harviera IT Solutions',
+      type: 'website',
+      images: [
+        {
+          url: `${baseUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: service.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: service.title,
+      description: service.description,
+      images: [`${baseUrl}/og-image.jpg`],
+    },
   };
 }
 
@@ -312,8 +337,27 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const faqs = serviceFAQs[service.slug] || [];
   const steps = processSteps[service.slug] || [];
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://harviera.com';
+  const serviceUrl = `${baseUrl}/services/${service.slug}`;
+
+  // Generate JSON-LD schemas
+  const serviceSchema = generateServiceSchema({
+    name: service.title,
+    description: service.description,
+    url: serviceUrl,
+    serviceType: 'IT Services',
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: baseUrl },
+    { name: 'Services', url: `${baseUrl}/services` },
+    { name: service.title, url: serviceUrl },
+  ]);
+
   return (
     <>
+      {renderJsonLd(serviceSchema)}
+      {renderJsonLd(breadcrumbSchema)}
       <section className="border-b py-16 md:py-24">
         <div className="container">
           <div className="mx-auto max-w-4xl text-center">
