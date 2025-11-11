@@ -1,0 +1,268 @@
+---
+title: Kubernetes Security Hardening Guide
+slug: kubernetes-security-hardening
+description: A comprehensive guide to securing your Kubernetes clusters, covering RBAC, network policies, pod security, secrets management, and compliance.
+author: Michael Torres
+date: 2024-11-01
+readTime: 25 min read
+category: Security
+difficulty: Advanced
+tags:
+  - Kubernetes
+  - Security
+  - DevSecOps
+  - Cloud Native
+published: true
+---
+
+## Introduction
+
+Kubernetes provides powerful orchestration capabilities, but securing it requires careful configuration and ongoing vigilance. This guide covers essential hardening techniques for production Kubernetes clusters.
+
+## 1. RBAC Configuration
+
+### Principle of Least Privilege
+
+Never use cluster-admin for applications. Create specific roles with minimal permissions:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  namespace: production
+rules:
+  - apiGroups: ['']
+    resources: ['pods']
+    verbs: ['get', 'list', 'watch']
+```
+
+### Service Account Best Practices
+
+- Disable auto-mounting of service account tokens when not needed
+- Create dedicated service accounts per application
+- Regularly audit service account permissions
+
+## 2. Network Policies
+
+### Default Deny Strategy
+
+Start with a default deny-all policy and explicitly allow required traffic:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+```
+
+### Segment by Namespace
+
+Use namespaces as security boundaries with strict network policies between them.
+
+## 3. Pod Security
+
+### Security Contexts
+
+Always configure security contexts for pods:
+
+```yaml
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 2000
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+```
+
+### Pod Security Standards
+
+Implement Pod Security Admission to enforce security standards:
+
+- **Privileged**: Unrestricted (avoid in production)
+- **Baseline**: Minimally restrictive
+- **Restricted**: Heavily restricted (recommended)
+
+## 4. Secrets Management
+
+### Don't Store Secrets in ConfigMaps
+
+Use Kubernetes Secrets with encryption at rest enabled.
+
+### External Secrets Operators
+
+Integrate with external secret managers:
+
+- AWS Secrets Manager
+- HashiCorp Vault
+- Azure Key Vault
+- Google Secret Manager
+
+### Rotation Strategy
+
+Implement automatic secret rotation and ensure applications can handle updates gracefully.
+
+## 5. Image Security
+
+### Use Trusted Registries
+
+- Maintain private registries for production images
+- Scan images for vulnerabilities before deployment
+- Sign images and verify signatures
+
+### Admission Controllers
+
+Implement ImagePolicyWebhook or tools like OPA Gatekeeper to enforce image policies:
+
+```yaml
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: allowed-repositories
+spec:
+  match:
+    kinds:
+      - apiGroups: ['']
+        kinds: ['Pod']
+  parameters:
+    repos:
+      - 'mycompany.azurecr.io'
+      - 'gcr.io/mycompany'
+```
+
+## 6. API Server Hardening
+
+### Anonymous Auth
+
+Disable anonymous authentication:
+
+```bash
+--anonymous-auth=false
+```
+
+### Audit Logging
+
+Enable comprehensive audit logging to track all API requests:
+
+```yaml
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+  - level: Metadata
+    omitStages:
+      - RequestReceived
+```
+
+### Encryption at Rest
+
+Enable encryption for etcd data:
+
+```bash
+--encryption-provider-config=/etc/kubernetes/encryption-config.yaml
+```
+
+## 7. Runtime Security
+
+### Implement Runtime Monitoring
+
+Use tools like:
+
+- **Falco**: Detects anomalous behavior
+- **Sysdig**: Container and Kubernetes security
+- **Aqua Security**: Comprehensive runtime protection
+
+### Resource Limits
+
+Always set resource requests and limits to prevent resource exhaustion attacks:
+
+```yaml
+resources:
+  requests:
+    memory: '256Mi'
+    cpu: '250m'
+  limits:
+    memory: '512Mi'
+    cpu: '500m'
+```
+
+## 8. Compliance and Auditing
+
+### Regular Security Audits
+
+Use tools like:
+
+- **kube-bench**: CIS Kubernetes Benchmark
+- **kube-hunter**: Penetration testing
+- **Polaris**: Configuration validation
+
+### Compliance Frameworks
+
+Align with frameworks like:
+
+- CIS Kubernetes Benchmark
+- NIST 800-190
+- PCI DSS (for payment workloads)
+- HIPAA (for healthcare workloads)
+
+## 9. Supply Chain Security
+
+### SBOM Generation
+
+Generate Software Bill of Materials for all container images.
+
+### Vulnerability Scanning
+
+Implement continuous scanning in CI/CD pipelines:
+
+- **Trivy**: Comprehensive vulnerability scanner
+- **Grype**: Vulnerability scanner for container images
+- **Snyk**: Developer-first security platform
+
+## 10. Incident Response
+
+### Prepare for Breaches
+
+- Maintain runbooks for common security incidents
+- Set up alerts for suspicious activities
+- Practice incident response procedures
+- Implement forensic logging and analysis capabilities
+
+### Isolation Procedures
+
+Have procedures to quickly isolate compromised workloads without disrupting entire clusters.
+
+## Checklist
+
+Use this checklist for cluster hardening:
+
+- [ ] RBAC configured with least privilege
+- [ ] Network policies implemented (default deny)
+- [ ] Pod security standards enforced
+- [ ] Secrets encrypted at rest
+- [ ] Image scanning enabled
+- [ ] Admission controllers configured
+- [ ] API server hardened
+- [ ] Audit logging enabled
+- [ ] Runtime security monitoring active
+- [ ] Resource limits set on all pods
+- [ ] Regular security scans scheduled
+- [ ] Incident response plan documented
+
+## Conclusion
+
+Kubernetes security is not a one-time task but an ongoing process. Regularly review configurations, update components, scan for vulnerabilities, and stay informed about emerging threats. The investment in security hardening pays dividends in protecting your infrastructure and data.
+
+## Additional Resources
+
+- [Kubernetes Security Documentation](https://kubernetes.io/docs/concepts/security/)
+- [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes)
+- [NIST Application Container Security Guide](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf)
