@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +8,6 @@ import { Card } from '@/components/ui/card';
 import { Search, FileText, Briefcase, Building2, Lightbulb, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { useSearch } from '@/hooks/use-search';
-import { SearchResult } from '@/lib/search';
 
 const typeIcons = {
   service: Briefcase,
@@ -34,7 +33,7 @@ const typeColors = {
   guide: 'bg-pink-100 text-pink-700',
 };
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const { search } = useSearch();
   const [query, setQuery] = useState(searchParams.get('q') || '');
@@ -220,5 +219,21 @@ export default function SearchPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container py-24 text-center">
+          <div className="animate-pulse">
+            <div className="mx-auto h-14 w-full max-w-3xl rounded-lg bg-muted" />
+          </div>
+        </div>
+      }
+    >
+      <SearchPageContent />
+    </Suspense>
   );
 }

@@ -1,13 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { memo, createElement } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { LucideIcon, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { getIconComponent } from '@/lib/icons';
 
 interface ServiceCardProps {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   description: string;
   features: string[];
@@ -15,8 +17,14 @@ interface ServiceCardProps {
   index?: number;
 }
 
+const IconRenderer = memo(({ iconName, className }: { iconName: string; className?: string }) => {
+  const IconComponent = getIconComponent(iconName);
+  return createElement(IconComponent, { className });
+});
+IconRenderer.displayName = 'IconRenderer';
+
 export function ServiceCard({
-  icon: Icon,
+  icon,
   title,
   description,
   features,
@@ -33,7 +41,7 @@ export function ServiceCard({
       <Card className="h-full transition-shadow hover:shadow-lg">
         <CardHeader>
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-            <Icon className="h-6 w-6 text-blue-600" />
+            <IconRenderer iconName={icon} className="h-6 w-6 text-blue-600" />
           </div>
           <CardTitle className="text-xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

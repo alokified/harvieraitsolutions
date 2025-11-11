@@ -4,12 +4,12 @@ import { Mdx } from '@/components/mdx-components';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Calendar, Clock, Share2, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { BlogCard } from '@/components/sections/blog-card';
 import { TableOfContents } from '@/components/blog/table-of-contents';
+import { ShareButtons } from '@/components/blog/share-buttons';
 import { generateArticleSchema, generateBreadcrumbSchema, renderJsonLd } from '@/lib/json-ld';
 
 interface BlogPostPageProps {
@@ -166,51 +166,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
 
             {/* Share Buttons */}
-            <div className="mb-12 flex items-center gap-4 border-y py-4">
-              <span className="text-sm font-medium">Share:</span>
-              <div className="flex gap-2">
-                <Button variant="outline" size="icon" asChild>
-                  <a
-                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Share on Twitter"
-                  >
-                    <Twitter className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button variant="outline" size="icon" asChild>
-                  <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Share on LinkedIn"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button variant="outline" size="icon" asChild>
-                  <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Share on Facebook"
-                  >
-                    <Facebook className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => {
-                    navigator.clipboard.writeText(shareUrl);
-                  }}
-                  aria-label="Copy link"
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            <ShareButtons url={shareUrl} title={shareTitle} />
           </div>
 
           {/* Main Content with Sidebar */}
@@ -281,9 +237,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
 
             <div className="mt-12 text-center">
-              <Button asChild variant="outline">
-                <Link href="/resources/blog">View All Articles</Link>
-              </Button>
+              <Link
+                href="/resources/blog"
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-8 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                View All Articles
+              </Link>
             </div>
           </div>
         </section>

@@ -2,7 +2,6 @@ import { allServices } from '.contentlayer/generated';
 import { HeroSplit } from '@/components/sections/hero-split';
 import { ServiceCard } from '@/components/sections/service-card';
 import { CTABand } from '@/components/sections/cta-band';
-import { getIconComponent } from '@/lib/icons';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -39,7 +38,7 @@ export default function ServicesPage() {
                 key={service.slug}
                 title={service.title}
                 description={service.description}
-                icon={getIconComponent(service.icon)}
+                icon={service.icon || 'code'}
                 features={service.features || []}
                 href={`/services/${service.slug}`}
               />

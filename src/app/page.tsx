@@ -8,7 +8,6 @@ import { Testimonials } from '@/components/sections/testimonials';
 import { BlogCard } from '@/components/sections/blog-card';
 import { FAQAccordion } from '@/components/sections/faq-accordion';
 import { CTABand } from '@/components/sections/cta-band';
-import { getIconComponent } from '@/lib/icons';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -141,7 +140,7 @@ export default function Home() {
                 key={service.slug}
                 title={service.title}
                 description={service.description}
-                icon={getIconComponent(service.icon)}
+                icon={service.icon || 'code'}
                 features={(service.features || []).slice(0, 3)}
                 href={`/services/${service.slug}`}
               />
