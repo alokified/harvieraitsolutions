@@ -120,6 +120,7 @@ export const Guide = defineDocumentType(() => ({
     date: { type: 'date', required: true },
     readTime: { type: 'string', required: true },
     category: { type: 'string', required: true },
+    tags: { type: 'list', of: { type: 'string' } },
     difficulty: { type: 'enum', options: ['Beginner', 'Intermediate', 'Advanced'] },
     image: { type: 'string' },
     published: { type: 'boolean', default: true },

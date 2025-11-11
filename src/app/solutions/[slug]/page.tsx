@@ -12,9 +12,9 @@ import { FAQAccordion } from '@/components/sections/faq-accordion';
 import { CTABand } from '@/components/sections/cta-band';
 
 interface IndustryPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -24,7 +24,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: IndustryPageProps): Promise<Metadata> {
-  const industry = allIndustries.find((i) => i.slug === params.slug);
+  const { slug } = await params;
+  const industry = allIndustries.find((i) => i.slug === slug);
 
   if (!industry) {
     return {};
@@ -346,8 +347,9 @@ const packages = [
   },
 ];
 
-export default function IndustryPage({ params }: IndustryPageProps) {
-  const industry = allIndustries.find((i) => i.slug === params.slug);
+export default async function IndustryPage({ params }: IndustryPageProps) {
+  const { slug } = await params;
+  const industry = allIndustries.find((i) => i.slug === slug);
 
   if (!industry) {
     notFound();

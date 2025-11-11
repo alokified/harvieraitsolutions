@@ -11,9 +11,9 @@ import { CTABand } from '@/components/sections/cta-band';
 import { KPIChart } from '@/components/charts/kpi-chart';
 
 interface CaseStudyPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -23,20 +23,22 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
-  const caseStudy = allCaseStudies.find((cs) => cs.slug === params.slug);
+  const { slug } = await params;
+  const caseStudy = allCaseStudies.find((cs) => cs.slug === slug);
 
   if (!caseStudy) {
     return {};
   }
 
   return {
-    title: `${caseStudy.title} | Case Studies | Harviera IT Solutions`,
+    title: `${caseStudy.client} - ${caseStudy.title} | Harviera IT Solutions`,
     description: caseStudy.description,
   };
 }
 
-export default function CaseStudyPage({ params }: CaseStudyPageProps) {
-  const caseStudy = allCaseStudies.find((cs) => cs.slug === params.slug);
+export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
+  const { slug } = await params;
+  const caseStudy = allCaseStudies.find((cs) => cs.slug === slug);
 
   if (!caseStudy) {
     notFound();
@@ -102,7 +104,7 @@ export default function CaseStudyPage({ params }: CaseStudyPageProps) {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {caseStudy.kpis.map((kpi, index) => (
+            {caseStudy.kpis?.map((kpi, index) => (
               <Card key={index} className="p-6">
                 <div className="mb-2 text-sm font-medium text-muted-foreground">{kpi.metric}</div>
                 <div className="mb-2 text-4xl font-bold text-primary">{kpi.value}</div>
@@ -215,12 +217,12 @@ export default function CaseStudyPage({ params }: CaseStudyPageProps) {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
-            {caseStudy.kpis.map((kpi, index) => (
+            {caseStudy.kpis?.map((kpi, index) => (
               <KPIChart
                 key={index}
                 metric={kpi.metric}
                 value={kpi.value}
-                description={kpi.description}
+                description={kpi.description || ''}
               />
             ))}
           </div>

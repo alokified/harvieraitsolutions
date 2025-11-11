@@ -12,9 +12,9 @@ import { FAQAccordion } from '@/components/sections/faq-accordion';
 import { CTABand } from '@/components/sections/cta-band';
 
 interface ServicePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -24,7 +24,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
-  const service = allServices.find((s) => s.slug === params.slug);
+  const { slug } = await params;
+  const service = allServices.find((s) => s.slug === slug);
 
   if (!service) {
     return {};
@@ -296,8 +297,9 @@ const packages = [
   },
 ];
 
-export default function ServicePage({ params }: ServicePageProps) {
-  const service = allServices.find((s) => s.slug === params.slug);
+export default async function ServicePage({ params }: ServicePageProps) {
+  const { slug } = await params;
+  const service = allServices.find((s) => s.slug === slug);
 
   if (!service) {
     notFound();

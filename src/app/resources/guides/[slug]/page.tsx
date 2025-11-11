@@ -11,9 +11,9 @@ import type { Metadata } from 'next';
 import { TableOfContents } from '@/components/blog/table-of-contents';
 
 interface GuidePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -23,7 +23,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
-  const guide = allGuides.find((g) => g.slug === params.slug);
+  const { slug } = await params;
+  const guide = allGuides.find((g) => g.slug === slug);
 
   if (!guide) {
     return {};
@@ -35,8 +36,9 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   };
 }
 
-export default function GuidePage({ params }: GuidePageProps) {
-  const guide = allGuides.find((g) => g.slug === params.slug);
+export default async function GuidePage({ params }: GuidePageProps) {
+  const { slug } = await params;
+  const guide = allGuides.find((g) => g.slug === slug);
 
   if (!guide) {
     notFound();
