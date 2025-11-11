@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/footer';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Providers } from '@/components/providers';
 import { siteConfig } from '@/config/site';
+import { Toaster } from 'sonner';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -92,6 +93,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
+          <Toaster position="top-right" richColors />
         </Providers>
       </body>
     </html>
