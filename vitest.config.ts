@@ -5,9 +5,28 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
+    environment: 'happy-dom',
     globals: true,
-    setupFiles: ['./vitest.setup.ts'],
+    setupFiles: [path.resolve(__dirname, './src/test/setup.ts')],
+    include: ['**/*.test.{ts,tsx}'],
+    exclude: ['node_modules', '.next', '.contentlayer'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        '.next/',
+        '.contentlayer/',
+        '**/*.config.{ts,js}',
+        '**/*.test.{ts,tsx}',
+      ],
+    },
   },
   resolve: {
     alias: {

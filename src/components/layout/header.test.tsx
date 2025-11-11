@@ -3,6 +3,32 @@ import { render, screen } from '@testing-library/react';
 import { Header } from './header';
 import { ReactNode } from 'react';
 
+// Mock Next.js Link
+vi.mock('next/link', () => ({
+  default: ({
+    children,
+    href,
+    ...props
+  }: {
+    children: ReactNode;
+    href: string;
+    [key: string]: unknown;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
+// Mock Next.js dynamic
+vi.mock('next/dynamic', () => ({
+  default: (fn: () => Promise<unknown>) => {
+    const Component = () => null;
+    Component.displayName = 'DynamicComponent';
+    return Component;
+  },
+}));
+
 // Mock siteConfig
 vi.mock('@/config/site', () => ({
   siteConfig: {
@@ -91,9 +117,15 @@ vi.mock('@/components/ui/navigation-menu', () => ({
 
 vi.mock('@/components/ui/sheet', () => ({
   Sheet: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  SheetTrigger: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
-    <button {...props}>{children}</button>
-  ),
+  SheetTrigger: ({
+    children,
+    asChild,
+    ...props
+  }: {
+    children: ReactNode;
+    asChild?: boolean;
+    [key: string]: unknown;
+  }) => (asChild ? <div {...props}>{children}</div> : <button {...props}>{children}</button>),
   SheetContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
@@ -111,16 +143,16 @@ describe('Header Component', () => {
 
   it('displays the site name', () => {
     render(<Header />);
-    const siteName = screen.getByText('Harviera IT Solutions');
+    const siteName = screen.getAllByText('Harviera IT Solutions')[0];
     expect(siteName).toBeInTheDocument();
   });
 
   it('renders all main navigation items', () => {
     render(<Header />);
-    expect(screen.getByText('Services')).toBeInTheDocument();
-    expect(screen.getByText('Solutions')).toBeInTheDocument();
-    expect(screen.getByText('Resources')).toBeInTheDocument();
-    expect(screen.getByText('About')).toBeInTheDocument();
+    expect(screen.getAllByText('Services')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Solutions')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Resources')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('About')[0]).toBeInTheDocument();
   });
 
   it('has proper ARIA labels for accessibility', () => {
@@ -131,13 +163,13 @@ describe('Header Component', () => {
 
   it('renders search button', () => {
     render(<Header />);
-    const searchButtons = screen.getAllByLabelText('Search');
-    expect(searchButtons.length).toBeGreaterThan(0);
+    const searchButton = screen.getByLabelText('Open search');
+    expect(searchButton).toBeInTheDocument();
   });
 
   it('renders mobile menu toggle', () => {
     render(<Header />);
-    const mobileMenuButton = screen.getByLabelText('Toggle menu');
+    const mobileMenuButton = screen.getByLabelText('Open menu');
     expect(mobileMenuButton).toBeInTheDocument();
   });
 });

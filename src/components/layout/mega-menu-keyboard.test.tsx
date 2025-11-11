@@ -4,6 +4,32 @@ import userEvent from '@testing-library/user-event';
 import { Header } from './header';
 import { ReactNode } from 'react';
 
+// Mock Next.js Link
+vi.mock('next/link', () => ({
+  default: ({
+    children,
+    href,
+    ...props
+  }: {
+    children: ReactNode;
+    href: string;
+    [key: string]: unknown;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
+// Mock Next.js dynamic
+vi.mock('next/dynamic', () => ({
+  default: (fn: () => Promise<unknown>) => {
+    const Component = () => null;
+    Component.displayName = 'DynamicComponent';
+    return Component;
+  },
+}));
+
 // Mock siteConfig
 vi.mock('@/config/site', () => ({
   siteConfig: {
@@ -82,9 +108,15 @@ vi.mock('@/components/ui/navigation-menu', () => ({
 
 vi.mock('@/components/ui/sheet', () => ({
   Sheet: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  SheetTrigger: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
-    <button {...props}>{children}</button>
-  ),
+  SheetTrigger: ({
+    children,
+    asChild,
+    ...props
+  }: {
+    children: ReactNode;
+    asChild?: boolean;
+    [key: string]: unknown;
+  }) => (asChild ? <div {...props}>{children}</div> : <button {...props}>{children}</button>),
   SheetContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
@@ -104,9 +136,12 @@ describe('MegaMenu Keyboard Navigation', () => {
 
     const servicesButton = screen.getByRole('button', { name: /services/i });
 
-    // Tab to the services button
+    // Tab to the logo link first (it's the first focusable element)
     await userEvent.tab();
-    // The button should be focused (testing that it's in tab order)
+    expect(document.activeElement?.tagName).toBe('A');
+
+    // Tab again to reach the services button
+    await userEvent.tab();
     expect(document.activeElement?.tagName).toBe('BUTTON');
   });
 
