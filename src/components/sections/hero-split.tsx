@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
@@ -78,11 +79,14 @@ export function HeroSplit({
             className={reversed ? 'lg:order-1' : ''}
           >
             {imageSrc ? (
-              <div className="aspect-video overflow-hidden rounded-2xl bg-gray-100 shadow-2xl">
-                <img
+              <div className="relative aspect-video overflow-hidden rounded-2xl bg-gray-100 shadow-2xl">
+                <Image
                   src={imageSrc}
                   alt={imageAlt || title}
-                  className="h-full w-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
                 />
               </div>
             ) : (

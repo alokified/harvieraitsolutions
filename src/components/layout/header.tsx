@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,9 +14,17 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { SearchPanel } from '@/components/search-panel';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
+
+// Lazy load SearchPanel for better performance
+const SearchPanel = dynamic(
+  () => import('@/components/search-panel').then((mod) => mod.SearchPanel),
+  {
+    ssr: false,
+    loading: () => <div className="h-0" />,
+  }
+);
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -30,10 +39,15 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
+        <Link
+          href="/"
+          className="flex items-center space-x-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          aria-label="Harviera IT Solutions Home"
+        >
           <div
             className="flex h-8 w-8 items-center justify-center rounded-md font-bold text-white"
             style={{ backgroundColor: siteConfig.brand.colors.primary }}
+            aria-hidden="true"
           >
             H
           </div>
@@ -51,16 +65,23 @@ export function Header() {
             {/* Services Mega Menu */}
             {servicesNav?.items && (
               <NavigationMenuItem>
-                <NavigationMenuTrigger>{servicesNav.title}</NavigationMenuTrigger>
+                <NavigationMenuTrigger aria-label="Services menu">
+                  {servicesNav.title}
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[600px] gap-3 p-4 md:grid-cols-2">
+                  <ul
+                    className="grid w-[600px] gap-3 p-4 md:grid-cols-2"
+                    role="menu"
+                    aria-label="Services"
+                  >
                     {servicesNav.items.map((item) => (
-                      <li key={item.href}>
+                      <li key={item.href} role="none">
                         <NavigationMenuLink asChild>
                           <Link
                             href={item.href}
+                            role="menuitem"
                             className={cn(
-                              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-blue-600 focus:bg-gray-100 focus:text-blue-600'
+                              'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 hover:text-blue-600 focus-visible:bg-gray-100 focus-visible:text-blue-600 focus-visible:ring-2 focus-visible:ring-primary'
                             )}
                           >
                             <div className="text-sm font-medium leading-none">{item.title}</div>
@@ -189,15 +210,17 @@ export function Header() {
             size="icon"
             className="hidden md:flex"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
-            aria-label="Search"
+            aria-label={isSearchOpen ? 'Close search' : 'Open search'}
+            aria-expanded={isSearchOpen}
+            aria-controls="search-panel"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-5 w-5" aria-hidden="true" />
           </Button>
 
           {/* Primary CTA */}
           <Button
             asChild
-            className="hidden md:flex"
+            className="hidden md:flex focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             style={{ backgroundColor: siteConfig.brand.colors.accent }}
           >
             <Link href={siteConfig.ctas.primary.href}>{siteConfig.ctas.primary.title}</Link>
@@ -206,8 +229,13 @@ export function Header() {
           {/* Mobile Menu */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="lg:hidden">
-              <Button variant="ghost" size="icon" aria-label="Menu">
-                <Menu className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMobileMenuOpen}
+              >
+                <Menu className="h-5 w-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">

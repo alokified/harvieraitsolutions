@@ -92,10 +92,15 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <Providers>
+          <a href="#main-content" className="skip-to-content">
+            Skip to main content
+          </a>
           <div className="relative flex min-h-screen flex-col">
             <Header />
             <Breadcrumbs />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1" tabIndex={-1}>
+              {children}
+            </main>
             <Footer />
           </div>
           <Toaster position="top-right" richColors />
