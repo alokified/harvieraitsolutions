@@ -1,0 +1,159 @@
+{
+  "status": "operational",
+  "lastUpdated": "2025-01-15T10:30:00Z",
+  "uptime": {
+    "overall": 99.98,
+    "last30Days": 99.99,
+    "last90Days": 99.97
+  },
+  "services": [
+    {
+      "id": "api",
+      "name": "API Services",
+      "status": "operational",
+      "uptime": 99.99,
+      "description": "Core API endpoints and integrations"
+    },
+    {
+      "id": "cloud",
+      "name": "Cloud Infrastructure",
+      "status": "operational",
+      "uptime": 99.98,
+      "description": "Cloud hosting and deployment services"
+    },
+    {
+      "id": "monitoring",
+      "name": "Monitoring & Analytics",
+      "status": "operational",
+      "uptime": 99.97,
+      "description": "System monitoring and reporting"
+    },
+    {
+      "id": "support",
+      "name": "Customer Support",
+      "status": "operational",
+      "uptime": 100,
+      "description": "Support ticket system and live chat"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "inc-001",
+      "title": "Scheduled Maintenance - API Services",
+      "status": "resolved",
+      "severity": "maintenance",
+      "createdAt": "2025-01-10T02:00:00Z",
+      "resolvedAt": "2025-01-10T04:00:00Z",
+      "affectedServices": ["api"],
+      "updates": [
+        {
+          "timestamp": "2025-01-10T04:00:00Z",
+          "status": "resolved",
+          "message": "Maintenance completed successfully. All services are now operational."
+        },
+        {
+          "timestamp": "2025-01-10T03:00:00Z",
+          "status": "monitoring",
+          "message": "Maintenance in progress. API response times may be slightly elevated."
+        },
+        {
+          "timestamp": "2025-01-10T02:00:00Z",
+          "status": "identified",
+          "message": "Scheduled maintenance has begun. Expected completion time: 4:00 AM UTC."
+        }
+      ]
+    },
+    {
+      "id": "inc-002",
+      "title": "Elevated API Latency",
+      "status": "resolved",
+      "severity": "minor",
+      "createdAt": "2025-01-05T14:30:00Z",
+      "resolvedAt": "2025-01-05T15:45:00Z",
+      "affectedServices": ["api"],
+      "updates": [
+        {
+          "timestamp": "2025-01-05T15:45:00Z",
+          "status": "resolved",
+          "message": "API performance has returned to normal levels. The issue was caused by a temporary spike in traffic."
+        },
+        {
+          "timestamp": "2025-01-05T15:00:00Z",
+          "status": "monitoring",
+          "message": "We've implemented rate limiting adjustments and are monitoring the situation."
+        },
+        {
+          "timestamp": "2025-01-05T14:30:00Z",
+          "status": "investigating",
+          "message": "We are investigating reports of elevated API response times."
+        }
+      ]
+    },
+    {
+      "id": "inc-003",
+      "title": "Monitoring Dashboard Unavailable",
+      "status": "resolved",
+      "severity": "minor",
+      "createdAt": "2024-12-28T09:15:00Z",
+      "resolvedAt": "2024-12-28T10:30:00Z",
+      "affectedServices": ["monitoring"],
+      "updates": [
+        {
+          "timestamp": "2024-12-28T10:30:00Z",
+          "status": "resolved",
+          "message": "The monitoring dashboard is now fully accessible. Historical data has been preserved."
+        },
+        {
+          "timestamp": "2024-12-28T09:45:00Z",
+          "status": "monitoring",
+          "message": "Dashboard is coming back online. We're verifying data integrity."
+        },
+        {
+          "timestamp": "2024-12-28T09:15:00Z",
+          "status": "investigating",
+          "message": "The monitoring dashboard is currently unavailable. Core services remain operational."
+        }
+      ]
+    }
+  ],
+  "statusTypes": {
+    "operational": {
+      "label": "Operational",
+      "color": "green"
+    },
+    "degraded": {
+      "label": "Degraded Performance",
+      "color": "yellow"
+    },
+    "partial": {
+      "label": "Partial Outage",
+      "color": "orange"
+    },
+    "outage": {
+      "label": "Major Outage",
+      "color": "red"
+    },
+    "maintenance": {
+      "label": "Maintenance",
+      "color": "blue"
+    }
+  },
+  "severityTypes": {
+    "minor": {
+      "label": "Minor",
+      "color": "yellow"
+    },
+    "major": {
+      "label": "Major",
+      "color": "orange"
+    },
+    "critical": {
+      "label": "Critical",
+      "color": "red"
+    },
+    "maintenance": {
+      "label": "Maintenance",
+      "color": "blue"
+    }
+  }
+}

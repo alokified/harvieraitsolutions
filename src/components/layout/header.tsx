@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,6 +13,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { SearchPanel } from '@/components/search-panel';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
@@ -285,23 +285,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      {isSearchOpen && (
-        <div className="border-t bg-white px-4 py-3">
-          <div className="container mx-auto flex items-center gap-2">
-            <Search className="h-5 w-5 text-gray-400" />
-            <Input
-              type="search"
-              placeholder="Search services, solutions, resources..."
-              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              autoFocus
-            />
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(false)}>
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Search Panel */}
+      <SearchPanel isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   );
 }
