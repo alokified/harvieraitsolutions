@@ -9,6 +9,7 @@ export const Service = defineDocumentType(() => ({
     slug: { type: 'string', required: true },
     description: { type: 'string', required: true },
     icon: { type: 'string' },
+    image: { type: 'string' },
     features: { type: 'list', of: { type: 'string' } },
     benefits: { type: 'list', of: { type: 'string' } },
     technologies: { type: 'list', of: { type: 'string' } },
