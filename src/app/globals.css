@@ -120,6 +120,12 @@
     @apply bg-background text-foreground;
   }
 
+  /* Container utility for centered, responsive layouts */
+  .container {
+    @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
+    max-width: 1280px;
+  }
+
   /* Focus-visible styles for accessibility */
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-primary;
