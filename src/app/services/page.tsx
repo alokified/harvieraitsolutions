@@ -41,6 +41,7 @@ export default function ServicesPage() {
                 icon={service.icon || 'code'}
                 features={service.features || []}
                 href={`/services/${service.slug}`}
+                imageSrc={service.image}
               />
             ))}
           </div>

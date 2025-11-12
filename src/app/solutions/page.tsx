@@ -41,6 +41,7 @@ export default function SolutionsPage() {
                 description={industry.description}
                 benefits={industry.challenges || []}
                 href={`/solutions/${industry.slug}`}
+                imageSrc={industry.image}
               />
             ))}
           </div>

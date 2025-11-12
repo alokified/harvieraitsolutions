@@ -190,6 +190,7 @@ export default function CaseStudiesPage() {
                 summary={caseStudy.description}
                 results={caseStudy.results || []}
                 slug={caseStudy.slug}
+                imageSrc={caseStudy.image}
               />
             ))}
           </div>

@@ -44,6 +44,7 @@ export default function BlogPage() {
                 readTime={post.readTime}
                 category={post.category}
                 slug={post.slug}
+                imageSrc={post.image}
               />
             ))}
           </div>
