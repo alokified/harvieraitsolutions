@@ -5,12 +5,6 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
     environment: 'happy-dom',
     globals: true,
     setupFiles: [path.resolve(__dirname, './src/test/setup.ts')],
